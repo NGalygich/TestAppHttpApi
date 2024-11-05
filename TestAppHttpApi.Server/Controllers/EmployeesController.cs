@@ -1,34 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TestAppHttpApi.Server.Models;
+using TestAppHttpApi.Server;
+using TestAppHttpApi.Server.Data;
 
 namespace TestAppHttpApi.Server.Controllers
 {
-    [Route("/[action]")]
+    [Route("api/[action]")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly EmplDbContext _context;
+        private readonly TestAppHttpApiServerContext _context;
 
-        public EmployeesController(EmplDbContext context)
+        public EmployeesController(TestAppHttpApiServerContext context)
         {
             _context = context;
         }
 
-        // GET: /employees
         [ActionName("employees")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployee()
         {
-            return await _context.Employees.ToListAsync();
+            return await _context.Employee.ToListAsync();
         }
 
-        // GET: /employee/5
         [ActionName("employee")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
+        public async Task<ActionResult<Employee>> GetEmployee(int? id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _context.Employee.FindAsync(id);
 
             if (employee == null)
             {
@@ -38,10 +42,9 @@ namespace TestAppHttpApi.Server.Controllers
             return employee;
         }
 
-        // PUT: /fire/5
         [ActionName("fire")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        public async Task<IActionResult> PutEmployee(int? id, Employee employee)
         {
             if (id != employee.Id)
             {
@@ -69,38 +72,35 @@ namespace TestAppHttpApi.Server.Controllers
             return NoContent();
         }
 
-        // POST: /hire
         [ActionName("hire")]
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
         {
-            _context.Employees.Add(employee);
+            _context.Employee.Add(employee);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
         }
 
-        // DELETE: /delete/5
         [ActionName("delete")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteEmployee(int? id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _context.Employee.FindAsync(id);
             if (employee == null)
             {
                 return NotFound();
             }
 
-            _context.Employees.Remove(employee);
+            _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool EmployeeExists(int id)
+        private bool EmployeeExists(int? id)
         {
-            return _context.Employees.Any(e => e.Id == id);
+            return _context.Employee.Any(e => e.Id == id);
         }
-
     }
 }

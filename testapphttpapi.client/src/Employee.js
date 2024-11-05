@@ -7,14 +7,15 @@ export class Employee extends Component {
         super(props);
 
         this.state = {
-            Id: "",
-            LastName: "",
-            FirstName: "",
-            MeddleName: "",
-            PositionCode: "",
-            DepartmentCode: "",
-            IsHidden: "",
-            LastModified: ""
+            departments: [],
+            employees: [],
+            modalTitle: "",
+            EmployeeId: 0,
+            EmployeeName: "",
+            Department: "",
+            DateOfJoining: "",
+            PhotoFileName: "anonymous.png",
+            PhotoPath: variables.PHOTO_URL
         }
     }
 
@@ -25,6 +26,12 @@ export class Employee extends Component {
             .then(data => {
                 this.setState({ employees: data });
             });
+
+        fetch(variables.API_URL + 'department/getDepartment')
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ departments: data });
+            });
     }
 
     componentDidMount() {
@@ -33,6 +40,9 @@ export class Employee extends Component {
 
     changeEmployeeName = (e) => {
         this.setState({ EmployeeName: e.target.value });
+    }
+    changeDepartment = (e) => {
+        this.setState({ Department: e.target.value });
     }
     changeDateOfJoining = (e) => {
         this.setState({ DateOfJoining: e.target.value });
@@ -264,8 +274,8 @@ export class Employee extends Component {
                                     <div className="p-2 w-50 bd-highlight">
                                         <img width="250px" height="250px"
                                             src={PhotoPath + PhotoFileName} />
-                                        <input className="m-2" type="file"
-                                            onChange={this.imageUpload} />
+                                        <input className="m-2" type="file" 
+                                        onChange={this.imageUpload} />
                                     </div>
                                 </div>
 

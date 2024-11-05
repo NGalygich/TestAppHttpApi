@@ -28,7 +28,7 @@
 ::.\sqlite3.exe TestDB.db "insert into ClosureTable (ParentId, ChildId, Depth) select e_1.Id as ParentId, e_2.Id as ChildId, iif(e_1.PositionCode = substring(e_2.PositionCode, 0, length(e_2.PositionCode)), iif(e_1.Id = e_2.Id, 0, 1), iif(e_1.PositionCode = substring(e_2.PositionCode, 0, length(e_2.PositionCode) - 1), iif(e_1.Id = e_2.Id, 0, 1) + 1, iif(e_1.Id = e_2.Id, 0, 1) + 2)) as Depth from Employees as e_1 cross join Employees as e_2 where e_1.DepartmentCode = e_2.DepartmentCode and (e_1.PositionCode = substring(e_2.PositionCode, 0, length(e_2.PositionCode)) or e_1.PositionCode = substring(e_2.PositionCode, 0, length(e_2.PositionCode) - 1)) or e_1.DepartmentCode = '0' and e_2.Id <> 1"
 
 ::.\sqlite3.exe TestDB.db "delete from Employees;" ".exit"
-::.\sqlite3.exe TestDB.db "ALTER TABLE Employees RENAME TO Employee"
+.\sqlite3.exe TestDB.db "ALTER TABLE Employees RENAME TO Employee"
 .\sqlite3.exe TestDB.db "select * from Employee;" ".exit"
 .\sqlite3.exe TestDB.db "select * from ClosureTable;" ".exit"
 
