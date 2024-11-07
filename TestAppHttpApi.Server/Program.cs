@@ -1,48 +1,27 @@
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using TestAppHttpApi.Server.Data;
-var builder = WebApplication.CreateBuilder(args);
-//builder.Services.AddDbContext<TestAppHttpApiServerContext>(options =>
-//    options.UseSqlite(builder.Configuration.GetConnectionString("TestAppHttpApiServerContext") ?? throw new InvalidOperationException("Connection string 'TestAppHttpApiServerContext' not found.")));
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using TestAppHttpApi.Server;
 
-//public void ConfigureServices(IServiceCollection services)
-//{
-    builder.Services.AddControllers();
-
-    //services.AddDbContext<EmplDbContext>(options =>
-    //options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
-
-
-    //services.AddCors();
-    var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = "TestDB.db" };
-    var connectionString = connectionStringBuilder.ToString();
-    var connection = new SqliteConnection(connectionString);
-    builder.Services.AddDbContext<TestAppHttpApiServerContext>(options =>
-    options.UseSqlite(connection));
-    builder.Services.AddCors();
-//}
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace TestAppHttpApi.Server
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

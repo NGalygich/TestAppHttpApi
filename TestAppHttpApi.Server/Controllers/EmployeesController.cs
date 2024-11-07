@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TestAppHttpApi.Server;
-using TestAppHttpApi.Server.Data;
+using TestAppHttpApi.Server.Models;
 
 namespace TestAppHttpApi.Server.Controllers
 {
-    [Route("api/[action]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -21,7 +20,7 @@ namespace TestAppHttpApi.Server.Controllers
             _context = context;
         }
 
-        [ActionName("employees")]
+        [ActionName("all")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployee()
         {
